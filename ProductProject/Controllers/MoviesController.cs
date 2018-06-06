@@ -10,6 +10,12 @@ namespace ProductProject.Controllers
 {
     public class MoviesController : Controller
     {
+        public ViewResult Index()
+        {
+            var movies = GetMovies();
+            return View(movies);
+        }
+
         // GET: Movies
         public ActionResult Random()
         {
@@ -28,23 +34,14 @@ namespace ProductProject.Controllers
             return View(viewModel);
         }
 
-        /*
-        public ActionResult Edit(int movieId)
+        public IEnumerable<Movie> GetMovies()
         {
-            return Content("movieId=" + movieId);
+            return new List<Movie>
+            {
+                new Movie {Id=1, Name="Schindler' s List"},
+                new Movie {Id=2, Name="Pursuit of Happiness"}
+            };
         }
-
-        //movies
-        public ActionResult Index(int? pageIndex, string sortBy)
-        {
-            if (!pageIndex.HasValue)
-                pageIndex = 1;
-            if (String.IsNullOrWhiteSpace(sortBy))
-                sortBy = "Name";
-            return Content(String.Format("pageIndex={0}&sortBy={1}", pageIndex, sortBy));
-
-        }
-        */
 
         public ActionResult ByReleaseDate(int year, int month)
         {

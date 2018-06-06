@@ -33,8 +33,13 @@ namespace Vidly.Controllers
 
         private IEnumerable<Customer> GetCustomers()
         {
-            var customers = _context.Customers.ToList();
-            return customers;
+            //var customers = _context.Customers.ToList();
+            //return customers;
+            return new List<Customer>
+            {
+                new Customer {Id = 1, Name = "John Smith"},
+                new Customer {Id = 2, Name = "Danzel Winston"}
+            };
         }
 
         public ActionResult Details(int id)
