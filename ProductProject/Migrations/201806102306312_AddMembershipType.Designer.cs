@@ -13,7 +13,7 @@ namespace ProductProject.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201803030031382_AddMembershipType"; }
+            get { return "201806102306312_AddMembershipType"; }
         }
         
         string IMigrationMetadata.Source

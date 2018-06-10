@@ -22,29 +22,16 @@ namespace Vidly.Controllers
             _context.Dispose();
         }
 
-
-
-
-
         public ViewResult Index()
         {
-            return View(GetCustomers());
+            var customers = _context.Customers.Include(c => c.MembershipType).ToList();
+            return View(customers);
         }
 
-        private IEnumerable<Customer> GetCustomers()
-        {
-            //var customers = _context.Customers.ToList();
-            //return customers;
-            return new List<Customer>
-            {
-                new Customer {Id = 1, Name = "John Smith"},
-                new Customer {Id = 2, Name = "Danzel Winston"}
-            };
-        }
 
         public ActionResult Details(int id)
         {
-            var customer = GetCustomers().SingleOrDefault(c => c.Id == id);
+            var customer = _context.Customers.SingleOrDefault(c => c.Id == id);
 
             if (customer == null)
                 return HttpNotFound();
@@ -52,14 +39,14 @@ namespace Vidly.Controllers
             return View(customer);
         }
 
-        public ActionResult New()
-        {
-            var memberShipTypes = _context.MembershipTypes.ToList();
-            var viewModel = new NewCustomerViewModel()
-            {
-                MembershipTypes = memberShipTypes
-            };
-            return View(viewModel);
-        }
+        //public ActionResult New()
+        //{
+        //    var memberShipTypes = _context.MembershipTypes.ToList();
+        //    var viewModel = new NewCustomerViewModel()
+        //    {
+        //        MembershipTypes = memberShipTypes
+        //    };
+        //    return View(viewModel);
+        //}
     }
 }
