@@ -28,7 +28,7 @@ namespace ProductProject.ViewModels
         [Display(Name = "Number in Stock")]
         [Range(1, 20)]
         [Required]
-        public int? NumberInStock { get; set; }
+        public byte? NumberInStock { get; set; }
 
         public string Title
         {

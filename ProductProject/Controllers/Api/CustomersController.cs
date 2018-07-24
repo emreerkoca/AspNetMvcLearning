@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Data.Entity;
 using System.Net.Http;
 using System.Web.Http;
 using AutoMapper;
@@ -23,26 +22,18 @@ namespace ProductProject.Controllers.Api
         //GET /api/customers
         public IEnumerable<CustomerDto> GetCustomers()
         {
-            return _context.Customers
-                .Include(c => c.MembershipType)
-                .ToList()
-                .Select(Mapper.Map<Customer, CustomerDto>);
+            return _context.Customers.ToList().Select(Mapper.Map<Customer, CustomerDto>);
         }
 
         //GET /api/customerDto/1
-        public IHttpActionResult GetCustomer(string query = null)
+        public IHttpActionResult GetCustomer(int id)
         {
-            var customersQuery = _context.Customers
-                .Include(c => c.MembershipType);
+            var customer = _context.Customers.SingleOrDefault(c => c.Id == id);
 
-            if (!String.IsNullOrWhiteSpace(query))
-                customersQuery = customersQuery.Where(c => c.Name.Contains(query));
+            if (customer == null)
+                throw new HttpResponseException(HttpStatusCode.NotFound);
 
-            var customerDtos = customersQuery
-                .ToList()
-                .Select(Mapper.Map<Customer, CustomerDto>);
-
-            return Ok(customerDtos);
+            return Ok(Mapper.Map<Customer,CustomerDto>(customer));
         }
 
         [HttpPost]
@@ -61,50 +52,37 @@ namespace ProductProject.Controllers.Api
 
         //PUT /api/customers/1
         [HttpPut]
-        public IHttpActionResult UpdateCustomer(int id, CustomerDto customerDto)
+        public void UpdateCustomer(int id, CustomerDto customerDto)
         {
 
-            //if (!ModelState.IsValid)
-            //    throw new HttpResponseException(HttpStatusCode.BadRequest);
-
-            //var customerInDb = _context.Customers.SingleOrDefault(x => x.Id == id);
-
-            //if (customerInDb == null)
-            //    throw new HttpResponseException(HttpStatusCode.NotFound);
-
-            //Mapper.Map(customerDto, customerInDb);
-
-            //_context.SaveChanges();
             if (!ModelState.IsValid)
-                return BadRequest();
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
 
-            var customerInDb = _context.Customers.SingleOrDefault(c => c.Id == id);
+            var customerInDb = _context.Customers.SingleOrDefault(x => x.Id == id);
 
             if (customerInDb == null)
-                return NotFound();
+                throw new HttpResponseException(HttpStatusCode.NotFound);
 
             Mapper.Map(customerDto, customerInDb);
 
             _context.SaveChanges();
-
-            return Ok();
         }
 
         //DELETE /api/customers/1
         [HttpDelete]
-        public IHttpActionResult DeleteCustomer(int id)
+        public void DeleteCustomer(int id)
         {
+            if (!ModelState.IsValid)
+                throw new HttpResponseException(HttpStatusCode.BadRequest);
+
             var customerInDb = _context.Customers.SingleOrDefault(x => x.Id == id);
 
             if (customerInDb == null)
-                return NotFound();
+                throw new HttpResponseException(HttpStatusCode.NotFound);
 
             _context.Customers.Remove(customerInDb);
             _context.SaveChanges();
-
-            return Ok();
         }
     }
 
 }
-
