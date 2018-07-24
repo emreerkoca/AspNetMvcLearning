@@ -17,12 +17,13 @@ namespace ProductProject.Models
         [Display(Name = "Genre")]
         [Required]
         public int GenreId { get; set; }
+
         public Genre Genre { get; set; }
         public DateTime DateAdded { get; set; }
         public DateTime ReleaseDate { get; set; }
         
         [Display(Name="Number in stock")]
         [Range(1,20)]
-        public byte NumberInStock { get; set; }
+        public int NumberInStock { get; set; }
     }
 }
